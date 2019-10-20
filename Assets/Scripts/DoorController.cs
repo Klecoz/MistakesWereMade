@@ -1,52 +1,85 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DoorController : MonoBehaviour
+namespace Assets.Scripts
 {
-    public float smooth = 2.0f;
-    public float DoorOpenAngle = 90.0f;
-    public float DoorCloseAngle = 0.0f;
-    public bool isOpenClose = false;
-    
-    void Start()
+    public class DoorController : MonoBehaviour
     {
-        
-    }
+        public float Smooth = 2.0f;
+        public float DoorOpenAngle = 90.0f;
+        public float DoorCloseAngle = 0.0f;
+        public bool IsOpenClose;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (isOpenClose == true)
+        private float _lowPitchRange = .75F;
+        private float _highPitchRange = 1.5F;
+
+        AudioSource DoorAudio;
+        public AudioClip DoorOpen;
+        public bool PlayClipOnce;
+
+        void Start()
+        {
+            DoorAudio = GetComponent<AudioSource>();
+            IsOpenClose = false;
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            OpenDoor();
+        }
+
+        void OpenDoor()
+        {
+            if (IsOpenClose == true)
             {
                 var target = Quaternion.Euler(0, DoorOpenAngle, 0);
+
                 // Dampen towards the target rotation
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, target,
-                    Time.deltaTime * smooth);
+                    Time.deltaTime * Smooth);
+
+                DoorAudio.pitch = Random.Range(_lowPitchRange, _highPitchRange);
+                if (PlayClipOnce == false)
+                {
+                    DoorAudio.PlayOneShot(DoorOpen);
+                    PlayClipOnce = true;
+                }
+
 
                 if (gameObject.transform.localRotation.y == 90.0f)
                 {
-                    isOpenClose = false;
+                    IsOpenClose = true;
+                    PlayClipOnce = false;
                 }
             }
 
-            if (isOpenClose == false)
+            if (IsOpenClose == false)
             {
                 var target1 = Quaternion.Euler(0, DoorCloseAngle, 0);
-                // Dampen towards the target rotation
+                // Dampen towards the target rotations
+
                 transform.localRotation = Quaternion.Slerp(transform.localRotation, target1,
-                    Time.deltaTime * smooth);
+                    Time.deltaTime * Smooth);
 
                 if (gameObject.transform.localRotation.y == 0.0f)
                 {
-                    isOpenClose = true;
+                    IsOpenClose = false;
                 }
 
             }
+        }
 
-            if (Input.GetKeyDown(KeyCode.H))
+        void TriggerDoor()
+        {
+            IsOpenClose = !IsOpenClose;
+        }
+
+        void OnTriggerEnter(Collider col)
+        {
+            if (col.gameObject.tag == "Player" || col.gameObject.tag == "Hand")
             {
-                isOpenClose =!isOpenClose;
+                TriggerDoor();
             }
+        }
     }
 }
