@@ -52,6 +52,7 @@ MonoBehaviour:
   DoorCloseAngle: 0
   IsOpenClose: 1
   DoorOpen: {fileID: 8300000, guid: 82e3342e85ef6ae4bba42f3edfcb7d7c, type: 3}
+  PlayClipOnce: 0
 --- !u!54 &7639600029761592614
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -79,8 +80,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.6754905, y: 3.2961893, z: 0.45084167}
-  m_Center: {x: -0.841018, y: 1.62501, z: -0.16466272}
+  m_Size: {x: 1.6754905, y: 3.2961893, z: 0.24404788}
+  m_Center: {x: -0.841018, y: 1.62501, z: -0.061265826}
 --- !u!82 &7815648809375448579
 AudioSource:
   m_ObjectHideFlags: 0
