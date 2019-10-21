@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 
 namespace Assets.Scripts
 {
@@ -8,6 +9,7 @@ namespace Assets.Scripts
         public float DoorOpenAngle = 90.0f;
         public float DoorCloseAngle = 0.0f;
         public bool IsOpenClose;
+        public bool disabled;
 
         private float _lowPitchRange = .75F;
         private float _highPitchRange = 1.5F;
@@ -15,6 +17,8 @@ namespace Assets.Scripts
         AudioSource DoorAudio;
         public AudioClip DoorOpen;
         public bool PlayClipOnce;
+
+        public UnityEvent OpenedTheDoor;
 
         void Start()
         {
@@ -30,7 +34,7 @@ namespace Assets.Scripts
 
         void OpenDoor()
         {
-            if (IsOpenClose == true)
+            if (IsOpenClose == true && !disabled)
             {
                 var target = Quaternion.Euler(0, DoorOpenAngle, 0);
 
@@ -43,6 +47,7 @@ namespace Assets.Scripts
                 {
                     DoorAudio.PlayOneShot(DoorOpen);
                     PlayClipOnce = true;
+                    OpenedTheDoor.Invoke();
                 }
 
 
@@ -51,9 +56,11 @@ namespace Assets.Scripts
                     IsOpenClose = true;
                     PlayClipOnce = false;
                 }
+
+
             }
 
-            if (IsOpenClose == false)
+            if (IsOpenClose == false && !disabled)
             {
                 var target1 = Quaternion.Euler(0, DoorCloseAngle, 0);
                 // Dampen towards the target rotations
